@@ -39,10 +39,10 @@ Pinecone figures below are from the run recorded in [docs/EVALUATION.md](docs/EV
 | Measure | Offline hash baseline | Pinecone e5 |
 |---|---:|---:|
 | Hit@1 | 26/27 | 27/27 |
-| Hit@3 | — | 27/27 |
-| Abstention on unanswerable questions | — | 4/4 |
-| Restricted-document access leakage | — | 0 |
-| Safety cases | — | 5/5 |
+| Hit@3 | 27/27 | 27/27 |
+| Abstention on unanswerable questions | 4/4 | 4/4 |
+| Restricted-document access leakage | 0 | 0 |
+| Safety cases | 5/5 | 5/5 |
 | Calibration | — | Answerable min 0.834; unanswerable max 0.775; `MIN_SCORE` 0.80 |
 
 The project has **27 passing automated tests**. End-to-end Copilot Studio checks passed for a cited answer (8 days casual leave, with a Leave Policy citation), cafeteria abstention, the Project Banyan access boundary, jailbreak blocking (`OpenAIJailBreak`), and an approved access request (`REQ-20261014-120744`). The evaluation set is small; see [limitations](#limitations).
