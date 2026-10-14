@@ -21,7 +21,8 @@ os.environ["DATA_DIR"] = tempfile.mkdtemp()
 os.environ["VECTOR_STORE"] = "memory"
 os.environ["EMBEDDING_PROVIDER"] = "hash"
 os.environ["INGEST_SAMPLES_ON_STARTUP"] = "true"
-os.environ.pop("API_KEYS_JSON", None)
+os.environ["MIN_SCORE"] = "-1"  # offline hash embedder needs its own threshold, not the Pinecone 0.80 from .env
+os.environ["API_KEYS_JSON"] = ""  # force demo keys: an existing (empty) var is not overridden by .env
 
 from fastapi.testclient import TestClient  # noqa: E402
 
