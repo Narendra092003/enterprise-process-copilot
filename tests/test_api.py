@@ -34,7 +34,11 @@ ADMIN = {"X-API-Key": "dev-admin-key"}
 
 @pytest.fixture(scope="module")
 def client():
-    with TestClient(app) as c:  # runs startup -> ingests sample_docs
+    with TestClient(app) as c:  # startup ingests sample_docs in a background thread
+        for _ in range(100):  # wait up to ~10 s for the 9 sample documents
+            if len(c.get("/v1/documents", headers=ADMIN).json()) >= 9:
+                break
+            time.sleep(0.1)
         yield c
 
 

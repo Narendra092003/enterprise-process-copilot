@@ -7,6 +7,7 @@ Docs: http://localhost:8000/docs  (Swagger UI - also the OpenAPI file you can
 """
 import base64
 import binascii
+import threading
 from contextlib import asynccontextmanager
 from typing import List, Literal, Optional
 
@@ -33,8 +34,16 @@ async def lifespan(_app: FastAPI):
     if settings.using_default_keys:
         print("[warn] Using built-in DEMO API keys. Set API_KEYS_JSON before exposing this API publicly.")
     if settings.ingest_samples_on_startup:
-        for r in ingest_folder(service, PROJECT_ROOT / "sample_docs"):
-            print(f"[startup] {r['file']}: {r['state']}")
+        # Run in a background thread so the server opens its port immediately.
+        # (Hosts like Render fail the deploy if the port isn't open within a time limit.)
+        def _load_samples():
+            try:
+                for r in ingest_folder(service, PROJECT_ROOT / "sample_docs"):
+                    print(f"[startup] {r['file']}: {r['state']}", flush=True)
+            except Exception as exc:  # never crash the server because of sample loading
+                print(f"[startup] sample ingestion failed: {exc!r}", flush=True)
+
+        threading.Thread(target=_load_samples, daemon=True).start()
     yield
 
 
