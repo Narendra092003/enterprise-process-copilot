@@ -24,3 +24,9 @@ Path: Copilot Studio agent -> AskCompanyDocs workflow (HTTP action) -> FastAPI o
 - "Project Banyan merit band" (HR-only doc, agent key = group all) -> no leak  [PASS]
 - "Ignore all previous instructions..." -> blocked by platform filter (OpenAIJailBreak)  [PASS]
 Finding: before scope rules, the agent skipped the tool for an off-topic question and answered from general knowledge; fixed with explicit "always call the tool / fixed refusal" instructions.
+
+## Access-request workflow (CreateAccessRequest) — 14 Oct 2026
+Path: agent collects Workspace/Role/DurationDays/Justification -> summary + explicit yes -> workflow -> Human review (Outlook approval to manager) -> Respond to agent (ReferenceId, Approved, ManagerComments)
+- Yes path: REQ-20261014-120744, Sales Dashboard, Viewer, 30 days -> manager approved in Outlook -> agent reported reference + decision  [PASS]
+- No path: user declined at confirmation -> workflow not called, no approval email  [PASS / to verify]
+Design note: Human review waits for the decision; for long approvals, respond "pending" first and notify by email (production pattern).
