@@ -36,4 +36,4 @@ Edit `eval/questions.json`:
 {"id": "n05", "key": "dev-employee-key", "question": "...", "expect": "abstain"}
 ```
 
-Aim for about 40 questions before quoting numbers. With only a handful, a single question swings the percentage a lot.
+The current Pinecone results use 36 labelled questions, including only four unanswerable questions. See [EVALUATION.md](EVALUATION.md) for the measured results and limitations; add near-miss questions before drawing broader conclusions.

@@ -8,7 +8,7 @@ An authenticated employee assistant that answers operational questions **only** 
 
 | Component | Owns | Does NOT own |
 |---|---|---|
-| **Copilot Studio agent** | Conversation, topic routing, final wording, asking for confirmation | Document access rules, secrets |
+| **Copilot Studio agent** | Conversation, workflow calls, final wording, asking for confirmation | Document access rules, secrets |
 | **Python FastAPI API** | Parsing, chunking, embeddings, Pinecone search, access filtering, safety filters, templates, logs | The chat UI |
 | **Pinecone** | Fast similarity search over chunk vectors + metadata filters | Being the system of record |
 | **SQLite catalog** | Which documents exist, their version, groups, status (ACTIVE/DELETED), jobs, metrics | Vector search |

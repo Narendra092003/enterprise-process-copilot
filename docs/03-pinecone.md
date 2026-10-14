@@ -15,7 +15,7 @@ PINECONE_NAMESPACE=tenant-demo
 PINECONE_CLOUD=aws
 PINECONE_REGION=us-east-1
 PINECONE_EMBED_MODEL=multilingual-e5-large
-MIN_SCORE=-1
+MIN_SCORE=0.80
 ```
 
 You don't create the index by hand. On first start, the code creates a **serverless** index with dimension 1024 and the cosine metric, which match `multilingual-e5-large`.
@@ -53,7 +53,7 @@ Set `MIN_SCORE` in `.env` to a value between those two numbers, restart, then ru
 python scripts/evaluate.py -v
 ```
 
-Write down **your** hit@1, hit@3, abstention accuracy, leakage and safety numbers. These are your project results.
+The measured Pinecone results for this project are recorded in [Evaluation results](EVALUATION.md). Re-run the evaluation if you change the corpus, model, or configuration; do not treat the current measurements as results for a different setup.
 
 If the two ranges overlap, which is common with only 9 documents, add more unanswerable questions to `eval/questions.json` and choose the threshold that keeps leakage at 0 while answering most questions. Treat it as a trade-off, and explain it as one in interviews.
 

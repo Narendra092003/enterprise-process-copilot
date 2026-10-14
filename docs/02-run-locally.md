@@ -51,12 +51,11 @@ curl -s -X POST http://localhost:8000/v1/documents/upload -H "X-API-Key: dev-adm
 ## 5. Run the tests and the evaluation
 
 ```bash
-python -m pytest -q                 # 19 core + 8 API tests
+python -m pytest -q                 # 27 automated tests
 python scripts/evaluate.py -v       # retrieval + safety report
 ```
 
-Expected evaluation in offline mode (measured while building):
-hit@1 26/27, hit@3 27/27, abstention 4/4, access leakage 0, safety 5/5. You will rerun this with Pinecone and real embeddings; those are the numbers to quote.
+The measured offline hash baseline hit@1 is 26/27. The Pinecone e5 results to quote are recorded in [docs/EVALUATION.md](EVALUATION.md).
 
 ## Reading order for the code (about 1 hour)
 

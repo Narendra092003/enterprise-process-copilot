@@ -6,7 +6,7 @@ Two kinds of flow:
 |---|---|---|
 | **A — Ingest** | SharePoint file created or changed → `POST /v1/ingestion-jobs` | SharePoint (standard), **HTTP (premium)** |
 | **A2 — Delete** | SharePoint file deleted → `POST /v1/documents/delete-by-source` | SharePoint, **HTTP (premium)** |
-| **B — Create Access Request** | Called by the Copilot agent after confirmation; creates a request and gets approval | SharePoint / Approvals / Outlook (standard) |
+| **B — Create Access Request** | Called by the Copilot agent after confirmation and returns the human review decision | Outlook Human review |
 
 The **HTTP** connector is premium. Options: the Power Automate Premium trial in your tenant, or the free Power Apps **Developer Plan** environment, which includes premium connectors for development. If neither is available, skip Flow A and load documents with `scripts/ingest.py`. Flow B uses only standard connectors.
 
@@ -43,6 +43,10 @@ Notes:
 
 The API marks the document `DELETED` in the catalog first (it disappears from answers instantly), then deletes its vectors.
 
+## Earlier topic-based Flow B design
+
+The following setup is retained as historical implementation guidance. The workflow actually used is described in [As built](#as-built) above.
+
 ## Flow B — Create Access Request (agent flow with approval)
 
 Create it from Copilot Studio so it's connected to the agent: open the agent → **Tools** → **+ Add a tool** → **New tool** → **Agent flow**. The trigger is **When an agent calls the flow**.
@@ -67,3 +71,13 @@ Test: confirm a request in the Copilot test panel, check that the list row appea
 - Each flow is **one fixed, named action** with validated inputs. The model can't pick a connector, URL or approver.
 - Flows live in a **Solution** with **connection references** and **environment variables**, so they move cleanly from dev to test to prod.
 - DLP policy: keep HTTP and business connectors in the allowed group only in the environments that need them.
+
+## As built (October 2026)
+
+The **CreateAccessRequest** workflow receives `Workspace`, `Role`, `DurationDays`, and `Justification`. It starts **Human review** in Outlook, configured for **First to respond**; the reviewer provides `Approved` (Yes/No) and `Comments`. **Respond to the agent** returns `ReferenceId`, `Approved`, and `ManagerComments`. The reference expression is:
+
+```text
+concat('REQ-', formatDateTime(utcNow(), 'yyyyMMdd-HHmmss'))
+```
+
+Ops Helper calls this workflow only after showing a summary of the four inputs and receiving a clear **yes**. End-to-end testing passed: the approved request returned `REQ-20261014-120744`; the no path did not call the workflow and sent no approval email. The detailed topic-based Flow B steps earlier in this guide are historical implementation guidance; the as-built agent uses Tools/Workflows.

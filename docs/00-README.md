@@ -14,4 +14,4 @@ Read [`../PROJECT_SPECIFICATION.md`](../PROJECT_SPECIFICATION.md) first; it's th
 ### Part 4 — Prove and present
 [07 Demo script and testing](./07-demo-and-testing.md) · [08 Build order and day plan](./08-build-order.md) · [09 Interview guide](./09-interview-guide.md)
 
-Create `docs/EVALUATION.md` yourself in phase 14 with your measured numbers.
+Measured Pinecone and end-to-end integration results are recorded in [`EVALUATION.md`](./EVALUATION.md).

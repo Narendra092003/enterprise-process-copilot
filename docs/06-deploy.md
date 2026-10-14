@@ -30,7 +30,7 @@ The test console's dropdown uses the `dev-...` keys, so it only works on your la
 
 Notes: the free URL changes every time you restart ngrok, unless you claim the free static domain in the ngrok dashboard (recommended: claim it and run `ngrok http --url=<your-domain> 8000`). If an HTTP call returns an HTML warning page instead of JSON, add the header `ngrok-skip-browser-warning: true` to that HTTP node or action.
 
-## Option 2 — Render (always-on URL, free tier)
+## Render deployment
 
 1. Push the project to GitHub. `.gitignore` already excludes `.env` and `data/`. Check that no key is committed.
 2. https://render.com → **New** → **Blueprint** → select the repo (it reads `render.yaml`).
@@ -47,6 +47,10 @@ docker run -p 8000:8000 --env-file .env ops-copilot-api
 ```
 
 Azure Container Apps or App Service is the production target in the spec: Key Vault for secrets, managed identity, Application Insights for logs.
+
+## As built (October 2026)
+
+The API is deployed on Render using the repository's [`render.yaml`](../render.yaml) blueprint at [https://ops-copilot-api-yp09.onrender.com](https://ops-copilot-api-yp09.onrender.com). API and Pinecone secrets are stored in Render **Environment** settings, not in tracked files. ngrok was blocked by the project network. Render's free tier sleeps after inactivity, so open [`/health/live`](https://ops-copilot-api-yp09.onrender.com/health/live) before a demo to wake the service.
 
 ## Pre-demo checklist
 

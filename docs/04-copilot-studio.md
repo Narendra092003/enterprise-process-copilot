@@ -2,6 +2,8 @@
 
 Microsoft changes the Copilot Studio UI often. Menu names below were checked against Microsoft Learn in October 2026, but if a button has moved, search the Learn page linked in each section.
 
+The workflow actually used in this project is documented in [As built (October 2026)](#as-built-october-2026) below. The topic-based steps in this guide describe the earlier Copilot Studio UI and are reference material.
+
 ## 0. Get access (do this on day 1, because it can take time)
 
 Copilot Studio sign-up needs a **work or school account**; personal Gmail/Outlook addresses are usually rejected. Options, best first:
@@ -15,10 +17,10 @@ On the trial you **can build and test in the Test panel but cannot publish**. Th
 
 ## 1. Make the API reachable
 
-Copilot Studio runs in Microsoft's cloud, so it cannot call `localhost`. Use ngrok or Render ([06-deploy.md](06-deploy.md)), and set real random keys in `API_KEYS_JSON` first.
+Copilot Studio runs in Microsoft's cloud, so it cannot call `localhost`. This project uses the Render endpoint documented in [06-deploy.md](06-deploy.md). Configure the API key through the workflow's secure connection/settings; do not paste a real key into documentation or commit it.
 
 You will need:
-- `API_URL` such as `https://abcd-1234.ngrok-free.app`
+- `API_URL`: `https://ops-copilot-api-yp09.onrender.com`
 - `COPILOT_KEY`, a non-admin key with groups `["all"]`
 
 ## 2. Create the agent
@@ -107,3 +109,11 @@ Why the confirmation matters (interview point): the model never triggers a busin
 ## 6. Authentication note
 
 On the trial, test-panel users are you. In production you would set **Settings → Security → Authentication → Authenticate with Microsoft** (Entra ID). The API would then validate the user's token and read their groups instead of using one shared key. That is the upgrade path listed in the README.
+
+## As built (October 2026)
+
+The current Copilot Studio UI has **Build**, **Preview**, **Evaluate**, and **Monitor** areas, with **Tools** instead of **Topics**. Ops Helper calls the API through the **AskCompanyDocs** workflow, created from **Tools > + Add > Workflow > HTTP action**. The workflow trigger is **When an agent calls the flow**, with a Text input named `Question`.
+
+The HTTP action sends a POST to `https://ops-copilot-api-yp09.onrender.com/v1/answer` with `Content-Type: application/json` and `X-API-Key: <copilot-studio-key>` headers. Its JSON body is `{"query": "<Question>"}`. **Respond to the agent** returns `Answer = body('HTTP')?['answer_text']`, `Status`, and `SuggestedAction`.
+
+During testing, the agent initially skipped the tool for off-topic questions and answered from general knowledge. Explicit scope rules fixed this: always call the tool for workplace questions and use a fixed refusal when the approved documents do not cover them.

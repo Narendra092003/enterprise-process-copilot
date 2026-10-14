@@ -2,6 +2,8 @@
 
 Section 12 of [`../PROJECT_SPECIFICATION.md`](../PROJECT_SPECIFICATION.md) is authoritative if this summary differs.
 
+This phase plan is historical. For the implemented Copilot Studio and Power Automate paths, see [04](04-copilot-studio.md) and [05](05-power-automate.md); measured completion evidence is in [EVALUATION.md](EVALUATION.md).
+
 ## How to use the reference implementation
 
 Keep this extracted package as the **reference copy** (`copilot-assistant-reference/`) and build in a fresh folder (`copilot-assistant/`). For each phase, read the reference file, write your version (with your AI assistant if you like), run the check, and commit. Copy only what you understand. If a phase runs out of time, copying the reference file is acceptable, but you must still pass the explain-it check.

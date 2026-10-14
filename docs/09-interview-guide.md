@@ -6,9 +6,9 @@
 >
 > The core is a **Python FastAPI** service. It parses PDFs and Word files, chunks them by section, embeds them, and stores them in **Pinecone** with metadata such as allowed groups, version and status. When a question comes in, it goes through **safety filters** (prompt-injection blocking, PII redaction), then a vector search with a **server-side access filter**, and then a re-check against the document catalog. If the best match is below a threshold I calibrated on a labelled question set, the assistant says it doesn't know instead of guessing.
 >
-> Copilot Studio calls the API through a custom knowledge topic, and actions such as an access request only run after the user confirms a preview, with manager approval in Power Automate. On my evaluation set it got **[your hit@1]** of answerable questions right on the first result, abstained on **[x/y]** unanswerable ones, and leaked **0** restricted documents."
+> Copilot Studio calls the API through the AskCompanyDocs workflow. An access request only runs after the user confirms, then goes through human review in Outlook. On the measured evaluation set it got **27/27** answerable questions right at hit@1, abstained on **4/4** unanswerable questions, and leaked **0** restricted documents."
 
-Fill in the brackets with **your own** numbers from `evaluate.py` with Pinecone.
+See [the recorded evaluation](EVALUATION.md) for the measurements and their limits.
 
 ## Whiteboard it in 5 boxes
 
@@ -49,7 +49,7 @@ Ingestion is idempotent: same source and same content hash means skip. A new ver
 Business teams own approvals and connectors in Power Platform, with DLP policies, audit and the Approvals app. Python owns retrieval and security. Each flow is one named action with validated inputs, so the model can't call arbitrary endpoints.
 
 **How does Copilot Studio call your API?**
-A topic with the `OnKnowledgeRequested` trigger sends `System.SearchQuery` (the question rewritten with conversation context) to `/v1/search` through an HTTP node, then maps each result to `Content`, `ContentLocation` and `Title` in `System.SearchResults`. Copilot Studio writes the cited answer. A simpler topic calls `/v1/answer` and shows the template text directly.
+The Ops Helper agent calls the AskCompanyDocs workflow, which accepts a `Question`, sends it to `/v1/answer` with an HTTP POST, and returns `Answer`, `Status`, and `SuggestedAction` to the agent. The current Copilot Studio interface uses Tools/Workflows; the topic-based example in `copilot/knowledge-topic.yaml` is a legacy reference.
 
 **What are "context-aware response templates"?**
 The API classifies the question as how-to, policy, troubleshooting or contact, picks the passage that fits (for example one with numbered steps for a how-to), and fills a fixed template: answer, source and next step. Blocked, no-evidence and low-confidence cases have their own safe templates. If the document is linked to an action, it offers that action.
@@ -71,10 +71,10 @@ Be honest: "Yes, I used an AI coding assistant, like most engineers now. I defin
 
 ## Resume bullets that are true for this build
 
-Use these once you have run it, and replace the brackets with your measured values:
+These bullets describe the measured build:
 
 - Built an internal process assistant with **Microsoft Copilot Studio** and a **Python/FastAPI** retrieval API, answering employee policy and IT questions from approved documents with source citations and safe "not found" fallbacks.
-- Indexed PDF/DOCX policies into **Pinecone** with section-aware chunking and group-based metadata filters; reached **[hit@1]%** top-1 retrieval accuracy on a **[N]**-question evaluation set with **0** restricted-document leaks.
+- Indexed synthetic policy and process documents into **Pinecone** with section-aware chunking and group-based metadata filters; reached **100% hit@1** on 27 answerable questions with **0** restricted-document leaks.
 - Implemented prompt-safety filters (injection blocking, PII redaction, poisoned-document flagging) and intent-based response templates, and automated access requests through **Power Automate** with user confirmation and manager approval.
 
 Avoid claiming a production deployment, real users, or a percentage reduction in manual work unless you measured it. "Designed to reduce manual query handling, measured by self-service rate" is honest and still strong.

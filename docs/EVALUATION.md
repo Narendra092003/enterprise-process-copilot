@@ -31,3 +31,4 @@ Path: agent collects Workspace/Role/DurationDays/Justification -> summary + expl
 - No path: user declined at confirmation -> workflow not called, no approval email  [PASS]
 Design note: Human review waits for the decision; for long approvals, respond "pending" first and notify by email (production pattern).
 
+
