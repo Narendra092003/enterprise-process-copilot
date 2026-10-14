@@ -1,0 +1,24 @@
+# Render.com blueprint (free web service). Set secret values in the Render dashboard.
+services:
+  - type: web
+    name: ops-copilot-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health/live
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: VECTOR_STORE
+        value: pinecone
+      - key: EMBEDDING_PROVIDER
+        value: pinecone
+      - key: INGEST_SAMPLES_ON_STARTUP
+        value: "true"
+      - key: PINECONE_API_KEY
+        sync: false
+      - key: API_KEYS_JSON
+        sync: false
+      - key: MIN_SCORE
+        sync: false
