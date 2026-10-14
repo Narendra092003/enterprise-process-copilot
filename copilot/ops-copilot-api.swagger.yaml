@@ -1,0 +1,42 @@
+﻿swagger: "2.0"
+info:
+  title: Ops Copilot Retrieval API
+  description: Answers employee process and policy questions from approved company documents, with citations. Refuses to guess when the documents do not cover the question.
+  version: "1.0.0"
+host: ops-copilot-api-yp09.onrender.com
+basePath: /
+schemes: [https]
+consumes: [application/json]
+produces: [application/json]
+securityDefinitions:
+  apiKey: {type: apiKey, in: header, name: X-API-Key}
+security:
+  - apiKey: []
+paths:
+  /v1/answer:
+    post:
+      operationId: AskCompanyDocs
+      summary: Answer a process or policy question from approved documents
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required: [query]
+            properties:
+              query: {type: string, description: "The employee's question, in their own words."}
+      responses:
+        "200":
+          description: Answer with citations
+          schema:
+            type: object
+            properties:
+              request_id: {type: string}
+              status: {type: string}
+              intent: {type: string}
+              answer_text: {type: string}
+              suggested_action: {type: string}
+              abstention_reason: {type: string}
+        "401":
+          description: Missing or invalid API key
