@@ -1,0 +1,30 @@
+{
+  "request_id": "req_dba0d810c27f477e",
+  "status": "evidence_found",
+  "intent": "how_to",
+  "evidence": [
+    {
+      "evidence_id": "doc_0d43719d71884366#32be84e5dd06#0",
+      "title": "Analytics Workspace Access Procedure",
+      "content": "This procedure explains how employees request access to the Analytics Workspace (Power BI premium workspace and the reporting data warehouse). Access is granted on a least-privilege basis and reviewed every quarter.",
+      "content_location": "https://intranet.example.com/it/analytics-workspace-access",
+      "document_id": "doc_0d43719d71884366",
+      "section": "Purpose",
+      "page": 1,
+      "score": 0.6623,
+      "action": "CreateAccessRequest"
+    },
+    {
+      "evidence_id": "doc_0d43719d71884366#32be84e5dd06#1",
+      "title": "Analytics Workspace Access Procedure",
+      "content": "1. Open the IT Service Portal and choose \"Access Request > Analytics Workspace\".\n2. Select the workspace name and the role you need: Viewer, Contributor or Admin.\n3. Enter a business justification of at least one sentence and the project code.\n4. Choose a duration: 30, 60 or 90 days. Permanent access is not available.\n5. Submit the request. It is routed to your reporting manager for approval.\n6. After manager approval, the workspace owner approves Contributor or Admin roles.\n7. You receive an email when access is provisioned, usually within 1 business day.",
+      "content_location": "https://intranet.example.com/it/analytics-workspace-access",
+      "document_id": "doc_0d43719d71884366",
+      "section": "Request access",
+      "page": 1,
+      "score": 0.5796,
+      "action": "CreateAccessRequest"
+    }
+  ],
+  "abstention_reason": null
+}

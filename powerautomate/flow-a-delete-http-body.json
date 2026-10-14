@@ -1,0 +1,3 @@
+{
+  "source_id": "sharepoint/@{triggerOutputs()?['body/ID']}"
+}

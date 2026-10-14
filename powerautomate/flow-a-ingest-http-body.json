@@ -1,0 +1,9 @@
+{
+  "file_name": "@{triggerOutputs()?['body/{FilenameWithExtension}']}",
+  "content_base64": "@{body('Get_file_content')?['$content']}",
+  "source_id": "sharepoint/@{triggerOutputs()?['body/ID']}",
+  "title": "@{triggerOutputs()?['body/{Name}']}",
+  "source_uri": "@{triggerOutputs()?['body/{Link}']}",
+  "allowed_groups": ["all"],
+  "classification": "INTERNAL"
+}

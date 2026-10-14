@@ -1,0 +1,24 @@
+### Phase 11+: send requests from VS Code (REST Client extension: click "Send Request")
+@base = http://localhost:8000
+@key = dev-employee-key
+
+### Health
+GET {{base}}/health/live
+
+### Search (evidence only)
+POST {{base}}/v1/search
+Content-Type: application/json
+X-API-Key: {{key}}
+
+{"query": "How do I request access to the analytics workspace?", "top_k": 3}
+
+### Answer (template)
+POST {{base}}/v1/answer
+Content-Type: application/json
+X-API-Key: {{key}}
+
+{"query": "How many casual leaves do I get?"}
+
+### Metrics (admin)
+GET {{base}}/v1/metrics
+X-API-Key: dev-admin-key

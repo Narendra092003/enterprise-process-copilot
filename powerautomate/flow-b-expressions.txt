@@ -1,0 +1,15 @@
+Flow B - "Create Access Request" agent flow: handy expressions
+
+Reference number (Compose action named "ReferenceId"):
+    concat('REQ-', formatDateTime(utcNow(), 'yyyyMMdd'), '-', toUpper(substring(guid(), 0, 6)))
+
+Validation condition (all must be true):
+    contains(createArray('Viewer','Contributor'), triggerBody()?['text_1'])      <- Role input
+    contains(createArray(30, 60, 90), int(triggerBody()?['number']))             <- DurationDays input
+    greaterOrEquals(length(trim(triggerBody()?['text_2'])), 10)                  <- Justification input
+
+(Input token names like text_1 / number differ per flow - use the Dynamic content
+picker instead of typing them, then check the names in "Peek code".)
+
+Approval outcome check:
+    equals(outputs('Start_and_wait_for_an_approval')?['body/outcome'], 'Approve')

@@ -1,0 +1,60 @@
+# Copilot Studio custom knowledge topic ("Option B" in docs/04-copilot-studio.md)
+# Paste into: Topics > + Add a topic > From blank > (...) Open code editor.
+# Replace YOUR-API-URL and YOUR-COPILOT-KEY.
+#
+# The trigger, System.SearchQuery, System.SearchResults and the ForAll mapping follow
+# Microsoft's "Connect to custom knowledge sources" guidance. The exact YAML for the
+# HTTP node's method/headers/body can differ between Copilot Studio versions: if the
+# editor shows an error on those lines, delete the `headers:` and `body:` blocks, save,
+# switch back to the canvas and set them on the HTTP node via "Headers and body > Edit"
+# (Header X-API-Key, Body = JSON content, Formula: { query: System.SearchQuery, top_k: 5 }).
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnKnowledgeRequested
+  id: main
+  intent: {}
+  actions:
+    - kind: HttpRequestAction
+      id: searchCompanyDocs
+      method: Post
+      url: https://YOUR-API-URL/v1/search
+      headers:
+        X-API-Key: YOUR-COPILOT-KEY
+      body:
+        kind: JsonRequestContent
+        content: |-
+          ={ query: System.SearchQuery, top_k: 5 }
+      response: Topic.searchResponse
+      responseSchema:
+        kind: Record
+        properties:
+          request_id: String
+          status: String
+          intent: String
+          abstention_reason: String
+          evidence:
+            type:
+              kind: Table
+              properties:
+                evidence_id: String
+                title: String
+                content: String
+                content_location: String
+                document_id: String
+                section: String
+                page: Number
+                score: Number
+                action: String
+
+    - kind: SetVariable
+      id: setSearchResults
+      variable: System.SearchResults
+      value: |-
+        =ForAll(Topic.searchResponse.evidence,
+        {
+          Content: content,
+          ContentLocation: content_location,
+          Title: title
+        })
+inputType: {}
+outputType: {}
